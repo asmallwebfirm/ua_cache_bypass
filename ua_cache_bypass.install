@@ -1,0 +1,28 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ *   Install file for User-Agent Cache Bypass module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function ua_cache_bypass_install() {
+  // Set some default variables.
+  variable_set('ua_cache_bypass_crawler_name', 'MyUserAgent/1.0');
+  variable_set('ua_cache_bypass_log_interval', 0);
+  variable_set('ua_cache_bypass_last_log', time() - 86400);
+}
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function ua_cache_bypass_uninstall() {
+  // Delete variables.
+  variable_del('ua_cache_bypass_crawler_name');
+  variable_del('ua_cache_bypass_log_interval');
+  variable_del('ua_cache_bypass_last_log');
+}

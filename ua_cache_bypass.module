@@ -1,0 +1,96 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ *   Primary file for User-Agent Cache Bypass module.
+ */
+
+/**
+ * Implements hook_boot().
+ */
+function ua_cache_bypass_boot() {
+  // Check that caching is enabled, the user-agent matches.
+  $ua = variable_get('ua_cache_bypass_crawler_name', 'MyUserAgent/1.0');
+  $cache = variable_get('cache', CACHE_DISABLED);
+  if ($cache == CACHE_NORMAL && strpos($_SERVER['HTTP_USER_AGENT'], $ua) !== FALSE) {
+    // Circumvent page cache (borrowed from bootstrap.inc + index.php).
+    ob_start(); // Extremely important for generating a cache at the end.
+    drupal_page_header();
+
+    drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+
+    // Log the bypass if appropriate.
+    ua_cache_bypass_log_bypass();
+
+    $return = menu_execute_active_handler();
+    if (is_int($return)) {
+      switch ($return) {
+        case MENU_NOT_FOUND:
+          drupal_not_found();
+          break;
+        case MENU_ACCESS_DENIED:
+          drupal_access_denied();
+          break;
+        case MENU_SITE_OFFLINE:
+          drupal_site_offline();
+          break;
+      }
+    }
+    elseif (isset($return)) {
+      print theme('page', $return);
+    }
+
+    drupal_page_footer();
+
+    exit;
+  }
+}
+
+
+/**
+ * Implements hook_perm().
+ */
+function ua_cache_bypass_perm() {
+  return array('administer ua cache bypass');
+}
+
+
+/**
+ * Implements hook_menu().
+ */
+function ua_cache_bypass_menu() {
+  $items = array();
+  $items['admin/settings/ua_cache_bypass'] = array(
+    'title' => 'User-Agent Cache Bypass',
+    'description' => 'Configuration for Tableau Crawl Bypass.',
+    'access callback' => 'user_access',
+    'access arguments' => array('administer ua cache bypass'),
+    'page callback' => 'ua_cache_bypass_config_page',
+    'file' => 'ua_cache_bypass.admin.inc',
+  );
+
+  return $items;
+}
+
+
+/**
+ * Helper function to log occurences.
+ */
+function ua_cache_bypass_log_bypass() {
+  // Get some variables
+  $time = time();
+  $last_record_time = variable_get('ua_cache_bypass_last_log', time());
+  $log_interval = variable_get('ua_cache_bypass_log_interval', 86400);
+
+  // If appropriate, log via watchdog.
+  if ($log_interval && $time - $last_record_time >= $log_interval) {
+    // Log to watchdog.
+    watchdog('cache bypass', 'Page cache was bypassed via user-agent string: !ua', array('!ua' => $_SERVER['HTTP_USER_AGENT']), WATCHDOG_NOTICE);
+
+    // Reset the last poll time to now.
+    variable_set('ua_cache_bypass_last_log', $time);
+  }
+
+  return;
+}

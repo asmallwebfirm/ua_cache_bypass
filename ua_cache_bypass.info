@@ -1,0 +1,5 @@
+name = User-Agent Cache Bypass
+description = Allows bypassing the page cache by specifying a user-agent string.
+package = Caching
+project = "ua_cache_bypass"
+core = 6.x
