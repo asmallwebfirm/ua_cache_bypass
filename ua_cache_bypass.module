@@ -1,19 +1,20 @@
 <?php
-// $Id$
 
 /**
  * @file
- *   Primary file for User-Agent Cache Bypass module.
+ *   Bypass Drupal Core page caching based on specific user-agent strings.
  */
 
 /**
- * Implements hook_boot().
+ * Implementation of hook_boot().
  */
 function ua_cache_bypass_boot() {
-  // Check that caching is enabled, the user-agent matches.
-  $ua = variable_get('ua_cache_bypass_crawler_name', 'MyUserAgent/1.0');
+  // Check that the user is annonymous, caching is enabled, and the user-agent matches.
+  $agents = variable_get('ua_cache_bypass_crawler_names', array('MyUserAgent/1.0'));
   $cache = variable_get('cache', CACHE_DISABLED);
-  if ($cache == CACHE_NORMAL && strpos($_SERVER['HTTP_USER_AGENT'], $ua) !== FALSE) {
+  global $user;
+
+  if ($user->uid == 0 && $cache == CACHE_NORMAL && in_array($_SERVER['HTTP_USER_AGENT'], $agents)) {
     // Circumvent page cache (borrowed from bootstrap.inc + index.php).
     ob_start(); // Extremely important for generating a cache at the end.
     drupal_page_header();
@@ -49,7 +50,18 @@ function ua_cache_bypass_boot() {
 
 
 /**
- * Implements hook_perm().
+ * Implementation of hook_help().
+ */
+function ua_cache_bypass_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#ua_cache_bypass':
+      return filter_filter('process', 1, NULL, file_get_contents(dirname(__FILE__) . "/README.txt"));
+  }
+}
+
+
+/**
+ * Implementation of hook_perm().
  */
 function ua_cache_bypass_perm() {
   return array('administer ua cache bypass');
@@ -57,7 +69,7 @@ function ua_cache_bypass_perm() {
 
 
 /**
- * Implements hook_menu().
+ * Implementation of hook_menu().
  */
 function ua_cache_bypass_menu() {
   $items = array();

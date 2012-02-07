@@ -20,11 +20,11 @@ function ua_cache_bypass_config_page() {
 function ua_cache_bypass_settings($form_state) {
   $form = array();
 
-  $form['ua_cache_bypass_crawler_name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('User Agent'),
-    '#description' => t("This is the case-sensitive user-agent that should be allowed to bypass the page cache. This doesn't have to be a full user agent string; a unique identifier within the user-agent string will suffice."),
-    '#default_value' => variable_get('ua_cache_bypass_crawler_name', 'MyUserAgent/1.0'),
+  $form['ua_cache_bypass_crawler_names'] = array(
+    '#type' => 'textarea',
+    '#title' => t('User Agents'),
+    '#description' => t("A list of case-sensitive user-agents, delimited by newlines, that are allowed to bypass the page cache. The full user-agent string is required."),
+    '#default_value' => implode("\n", variable_get('ua_cache_bypass_crawler_names', array('MyUserAgent/1.0'))),
     '#required' => TRUE,
   );
 
@@ -47,5 +47,16 @@ function ua_cache_bypass_settings($form_state) {
     '#required' => TRUE,
   );
 
+  $form['#validate'][] = 'ua_cache_bypass_settings_validate';
+
   return system_settings_form($form);
+}
+
+
+/**
+ * Validate function for ua_cache_bypass_settings().
+ */
+function ua_cache_bypass_settings_validate($form, &$form_state) {
+  // It's handier to store these as an array.
+  $form_state['values']['ua_cache_bypass_crawler_names'] = explode("\n", $form_state['values']['ua_cache_bypass_crawler_names']);
 }

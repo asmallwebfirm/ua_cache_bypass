@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file
@@ -11,7 +10,7 @@
  */
 function ua_cache_bypass_install() {
   // Set some default variables.
-  variable_set('ua_cache_bypass_crawler_name', 'MyUserAgent/1.0');
+  variable_set('ua_cache_bypass_crawler_names', array('MyUserAgent/1.0'));
   variable_set('ua_cache_bypass_log_interval', 0);
   variable_set('ua_cache_bypass_last_log', time() - 86400);
 }
@@ -22,7 +21,7 @@ function ua_cache_bypass_install() {
  */
 function ua_cache_bypass_uninstall() {
   // Delete variables.
-  variable_del('ua_cache_bypass_crawler_name');
+  variable_del('ua_cache_bypass_crawler_names');
   variable_del('ua_cache_bypass_log_interval');
   variable_del('ua_cache_bypass_last_log');
 }
