@@ -9,14 +9,15 @@
  * Implementation of hook_boot().
  */
 function ua_cache_bypass_boot() {
-  // Check that the user is annonymous, caching is enabled, and the user-agent matches.
+  // Check if user is annonymous, caching is enabled, and user-agent matches.
   $agents = variable_get('ua_cache_bypass_crawler_names', array('MyUserAgent/1.0'));
   $cache = variable_get('cache', CACHE_DISABLED);
   global $user;
 
   if ($user->uid == 0 && $cache == CACHE_NORMAL && in_array($_SERVER['HTTP_USER_AGENT'], $agents)) {
     // Circumvent page cache (borrowed from bootstrap.inc + index.php).
-    ob_start(); // Extremely important for generating a cache at the end.
+    // This ob_start() line is important for generating a cache at the end.
+    ob_start();
     drupal_page_header();
 
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
@@ -90,7 +91,7 @@ function ua_cache_bypass_menu() {
  * Helper function to log occurences.
  */
 function ua_cache_bypass_log_bypass() {
-  // Get some variables
+  // Get some variables.
   $time = time();
   $last_record_time = variable_get('ua_cache_bypass_last_log', time());
   $log_interval = variable_get('ua_cache_bypass_log_interval', 86400);
