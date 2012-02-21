@@ -54,7 +54,7 @@ function ua_cache_bypass_settings($form_state) {
 
 
 /**
- * Validate function for ua_cache_bypass_settings().
+ * Validation function for ua_cache_bypass_settings().
  */
 function ua_cache_bypass_settings_validate($form, &$form_state) {
   // It's handier to store these as an array.
