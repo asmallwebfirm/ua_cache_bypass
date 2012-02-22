@@ -99,7 +99,7 @@ function ua_cache_bypass_log_bypass() {
   // If appropriate, log via watchdog.
   if ($log_interval && $time - $last_record_time >= $log_interval) {
     // Log to watchdog.
-    watchdog('cache bypass', 'Page cache was bypassed via user-agent string: !ua', array('!ua' => $_SERVER['HTTP_USER_AGENT']), WATCHDOG_NOTICE);
+    watchdog('cache bypass', 'Page cache was bypassed via user-agent string: %ua', array('%ua' => $_SERVER['HTTP_USER_AGENT']), WATCHDOG_NOTICE);
 
     // Reset the last poll time to now.
     variable_set('ua_cache_bypass_last_log', $time);
