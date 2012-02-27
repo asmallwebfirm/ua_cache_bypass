@@ -79,7 +79,8 @@ function ua_cache_bypass_menu() {
     'description' => 'Configuration for Tableau Crawl Bypass.',
     'access callback' => 'user_access',
     'access arguments' => array('administer ua cache bypass'),
-    'page callback' => 'ua_cache_bypass_config_page',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ua_cache_bypass_settings'),
     'file' => 'ua_cache_bypass.admin.inc',
   );
 

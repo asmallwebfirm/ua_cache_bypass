@@ -7,14 +7,6 @@
 
 
 /**
- * Generates the User-Agent Cache Bypass settings page.
- */
-function ua_cache_bypass_config_page() {
-  return drupal_get_form('ua_cache_bypass_settings');
-}
-
-
-/**
  * Defines the User-Agent Cache Bypass settings form.
  */
 function ua_cache_bypass_settings($form_state) {
