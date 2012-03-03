@@ -76,7 +76,7 @@ function ua_cache_bypass_menu() {
   $items = array();
   $items['admin/settings/ua_cache_bypass'] = array(
     'title' => 'User-Agent Cache Bypass',
-    'description' => 'Configuration for Tableau Crawl Bypass.',
+    'description' => "Define user-agents that always bypass Drupal's page cache.",
     'access callback' => 'user_access',
     'access arguments' => array('administer ua cache bypass'),
     'page callback' => 'drupal_get_form',

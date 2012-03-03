@@ -13,6 +13,9 @@ function ua_cache_bypass_install() {
   variable_set('ua_cache_bypass_crawler_names', array('MyUserAgent/1.0'));
   variable_set('ua_cache_bypass_log_interval', 0);
   variable_set('ua_cache_bypass_last_log', time() - 86400);
+
+  // This module should run very early on.
+  db_query("UPDATE {system} SET weight = -100 WHERE name = 'ua_cache_bypass'");
 }
 
 
