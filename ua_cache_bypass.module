@@ -26,7 +26,7 @@ function ua_cache_bypass_boot() {
     ua_cache_bypass_log_bypass();
 
     // Execute the page callback and exit.
-    menu_execute_active_handler(); 
+    menu_execute_active_handler();
     exit;
   }
 }

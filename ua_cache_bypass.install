@@ -24,7 +24,7 @@ function ua_cache_bypass_install() {
 
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function ua_cache_bypass_uninstall() {
   // Delete variables.
