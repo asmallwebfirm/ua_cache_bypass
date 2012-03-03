@@ -5,46 +5,28 @@
  *   Bypass Drupal Core page caching based on specific user-agent strings.
  */
 
+
 /**
  * Implements hook_boot().
  */
 function ua_cache_bypass_boot() {
   // Check if user is annonymous, caching is enabled, and user-agent matches.
   $agents = variable_get('ua_cache_bypass_crawler_names', array('MyUserAgent/1.0'));
-  $cache = variable_get('cache', CACHE_DISABLED);
+  $cache_enabled = variable_get('cache', 1);
   global $user;
 
-  if ($user->uid == 0 && $cache == CACHE_NORMAL && in_array($_SERVER['HTTP_USER_AGENT'], $agents)) {
-    // This ob_start() line is important for generating a cache at the end.
+  if ($user->uid == 0 && $cache_enabled && in_array($_SERVER['HTTP_USER_AGENT'], $agents)) {
+    header('X-Drupal-Cache: MISS');
     ob_start();
 
-    // Circumvent page cache (borrowed from bootstrap.inc + index.php).
-    drupal_page_header();
+    // Continue the bootstrap process.
     drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
 
     // Log the bypass if appropriate.
     ua_cache_bypass_log_bypass();
 
-    $return = menu_execute_active_handler();
-    if (is_int($return)) {
-      switch ($return) {
-        case MENU_NOT_FOUND:
-          drupal_not_found();
-          break;
-        case MENU_ACCESS_DENIED:
-          drupal_access_denied();
-          break;
-        case MENU_SITE_OFFLINE:
-          drupal_site_offline();
-          break;
-      }
-    }
-    elseif (isset($return)) {
-      print theme('page', $return);
-    }
-
-    drupal_page_footer();
-
+    // Execute the page callback and exit.
+    menu_execute_active_handler(); 
     exit;
   }
 }
@@ -56,7 +38,7 @@ function ua_cache_bypass_boot() {
 function ua_cache_bypass_help($path, $arg) {
   switch ($path) {
     case 'admin/help#ua_cache_bypass':
-      return filter_filter('process', 1, NULL, file_get_contents(dirname(__FILE__) . "/README.txt"));
+      return file_get_contents(dirname(__FILE__) . "/README.txt");
   }
 }
 
@@ -74,13 +56,12 @@ function ua_cache_bypass_perm() {
  */
 function ua_cache_bypass_menu() {
   $items = array();
-  $items['admin/settings/ua_cache_bypass'] = array(
+  $items['admin/config/development/ua_cache_bypass'] = array(
     'title' => 'User-Agent Cache Bypass',
-    'description' => 'Configuration for Tableau Crawl Bypass.',
-    'access callback' => 'user_access',
-    'access arguments' => array('administer ua cache bypass'),
+    'description' => "Define user-agents that always bypass Drupal's page cache.",
     'page callback' => 'drupal_get_form',
     'page arguments' => array('ua_cache_bypass_settings'),
+    'access arguments' => array('administer ua cache bypass'),
     'file' => 'ua_cache_bypass.admin.inc',
   );
 

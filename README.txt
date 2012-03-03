@@ -21,4 +21,4 @@ for the page in question is updated with the latest rendering.
 
 * Enable the module
 * Give appropriate roles the "administer ua cache bypass" permission.
-* Add user-agents via the configuration page at /admin/settings/ua_cache_bypass.
+* Add user-agents via the configuration page at /admin/config/development/ua_cache_bypass.

@@ -1,4 +1,5 @@
 name = User-Agent Cache Bypass
 description = Allows bypassing the page cache by specifying a user-agent string.
 package = Performance and scalability
-core = 6.x
+core = 7.x
+configure = admin/config/development/ua_cache_bypass
