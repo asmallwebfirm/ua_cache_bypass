@@ -28,7 +28,17 @@ function ua_cache_bypass_drush_command() {
 }
 
 /**
- * Implements drush_hook_COMMAND().
+ * Implements hook_drush_help().
+ */
+function ua_cache_bypass_drush_help($section) {
+  switch ($section) {
+    case 'drush:cache-get-stale':
+      return dt("Returns a list of URLs whose page cache entries are older than a given amount of time ago.");
+  }
+}
+
+/**
+ * Drush command callback for cache-get-stale.
  */
 function drush_ua_cache_bypass_cache_get_stale($timeago = 3600) {
   // Drupal 7 uses REQUEST_TIME instead of time() for setting cache.
@@ -37,7 +47,7 @@ function drush_ua_cache_bypass_cache_get_stale($timeago = 3600) {
   // Query the DB for caches that are older than $time.
   $cids = db_select('cache_page', 'cp')
     ->fields('cp', array('cid'))
-    ->condition('created', $time,'<=')
+    ->condition('created', $time, '<=')
     ->orderBy('created', 'DESC')
     ->execute()
     ->fetchCol();
@@ -47,15 +57,5 @@ function drush_ua_cache_bypass_cache_get_stale($timeago = 3600) {
     foreach ($cids as $cid) {
       drush_print($cid);
     }
-  }
-}
-
-/**
- * Implements hook_drush_help().
- */
-function ua_cache_bypass_drush_help($section) {
-  switch ($section) {
-    case 'drush:cache-get-stale':
-      return dt("Returns a list of URLs whose page cache entries are older than a given amount of time ago.");
   }
 }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Admin page callbacks for the User-Agent Cache Bypass module.
+ * Admin page callbacks for the User-Agent Cache Bypass module.
  */
 
 

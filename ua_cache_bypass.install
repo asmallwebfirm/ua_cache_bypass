@@ -2,7 +2,8 @@
 
 /**
  * @file
- *   Install file for User-Agent Cache Bypass module.
+ * Install, update, and uninstall functions for the User-Agent Cache Bypass
+ * module.
  */
 
 
