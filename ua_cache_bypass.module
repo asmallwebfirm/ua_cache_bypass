@@ -2,7 +2,7 @@
 
 /**
  * @file
- *   Bypass Drupal Core page caching based on specific user-agent strings.
+ * Bypass Drupal Core page caching based on specific user-agent strings.
  */
 
 /**
@@ -31,12 +31,15 @@ function ua_cache_bypass_boot() {
         case MENU_NOT_FOUND:
           drupal_not_found();
           break;
+
         case MENU_ACCESS_DENIED:
           drupal_access_denied();
           break;
+
         case MENU_SITE_OFFLINE:
           drupal_site_offline();
           break;
+
       }
     }
     elseif (isset($return)) {
