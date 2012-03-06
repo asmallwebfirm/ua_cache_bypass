@@ -48,7 +48,7 @@ function drush_ua_cache_bypass_cache_get_stale($timeago = 3600) {
   $cids = db_select('cache_page', 'cp')
     ->fields('cp', array('cid'))
     ->condition('created', $time, '<=')
-    ->orderBy('created', 'DESC')
+    ->orderBy('created', 'ASC')
     ->execute()
     ->fetchCol();
 
