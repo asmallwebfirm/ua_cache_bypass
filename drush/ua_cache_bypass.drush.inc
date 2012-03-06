@@ -45,7 +45,7 @@ function drush_ua_cache_bypass_cache_get_stale($timeago = 3600) {
   $time = time() - filter_var($timeago, FILTER_SANITIZE_NUMBER_INT);
 
   // Query the DB for caches that are older than $time and print them.
-  $cids = db_query("SELECT cid FROM {cache_page} WHERE created <= %d ORDER BY created DESC", $time);
+  $cids = db_query("SELECT cid FROM {cache_page} WHERE created <= %d ORDER BY created ASC", $time);
   while ($entry = db_fetch_array($cids)) {
     drush_print($entry['cid']);
   }
