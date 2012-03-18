@@ -46,6 +46,12 @@ function ua_cache_bypass_boot() {
       print theme('page', $return);
     }
 
+    // Core page_set_cache will always fail, but Pressflow handles this fine.
+    if (!function_exists('drupal_page_is_cacheable')) {
+      ua_cache_bypass_page_set_cache();
+    }
+
+    // Still should be called for hook_exit() calls.
     drupal_page_footer();
 
     exit;
@@ -110,4 +116,23 @@ function ua_cache_bypass_log_bypass() {
   }
 
   return;
+}
+
+/**
+ * Reimplementaiton of core page_set_cache() function to guarantee a cache set
+ * at the end of page rendering.
+ */
+function ua_cache_bypass_page_set_cache() {
+  global $user, $base_root;
+
+  // Got rid of check on page_get_cache(TRUE) from Core.
+  if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    if ($data = ob_get_contents()) {
+      if (variable_get('page_compression', TRUE) && extension_loaded('zlib')) {
+        $data = gzencode($data, 9, FORCE_GZIP);
+      }
+      ob_end_flush();
+      cache_set($base_root . request_uri(), $data, 'cache_page', CACHE_TEMPORARY, drupal_get_headers());
+    }
+  }
 }
