@@ -44,10 +44,15 @@ function ua_cache_bypass_help($path, $arg) {
 
 
 /**
- * Implements hook_perm().
+ * Implements hook_permission().
  */
-function ua_cache_bypass_perm() {
-  return array('administer ua cache bypass');
+function ua_cache_bypass_permission() {
+  return array(
+    'administer ua cache bypass' => array(
+      'title' => 'Administer User-Agent Cache Bypass',
+      'description' => 'Allow users to configure the User-Agent Cache Bypass module.',
+    ),
+  );
 }
 
 
