@@ -76,6 +76,9 @@ function ua_cache_bypass_menu() {
 
 /**
  * Helper function to log occurences.
+ *
+ * @return
+ *   TRUE if bypass was logged, otherwise FALSE.
  */
 function ua_cache_bypass_log_bypass() {
   // Get some variables.
@@ -90,7 +93,9 @@ function ua_cache_bypass_log_bypass() {
 
     // Reset the last poll time to now.
     variable_set('ua_cache_bypass_last_log', $time);
+
+    return TRUE;
   }
 
-  return;
+  return FALSE;
 }
